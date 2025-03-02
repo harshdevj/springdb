@@ -38,33 +38,33 @@
         }
     </style>
     <script>
-        var xhr = new XMLHttpRequest();
-        var username = "admin";
-        var password = "password";
+        function login() {
+            var username = document.getElementById("uname-text").value;
+            var password = document.getElementById("pass-text").value;
 
-        xhr.open("GET", "http://localhost:8080/api/login?username=" + encodeURIComponent(username) + "&password=" + encodeURIComponent(password), true);
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    console.log("Response:", xhr.responseText);
-                } else {
-                    console.error("Error:", xhr.statusText);
+            fetch(`http://localhost:8080/api/login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-            }
-        };
-
-xhr.send();
-
+                return response.text();
+            })
+            .then(data => {
+                alert("Response:" + data);
+            })
+            .catch(error => {
+                alert("Error:" + error);
+            });
+        }
     </script>
 </head>
 <body>
 <div class="login-container">
     <h2>Login</h2>
     <form>
-        <input type="text" placeholder="Username" required>
-        <input type="password" placeholder="Password" required>
-        <button type="submit">Login</button>
+        <input id="uname-text" type="text" placeholder="Username">
+        <input id="pass-text" type="password" placeholder="Password">
+        <button type="button" onclick="login()">Login</button>
     </form>
 </div>
 </body>
